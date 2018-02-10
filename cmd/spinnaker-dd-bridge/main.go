@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/namely/spinnaker-datadog-bridge/spinnaker"
-	"github.com/namely/spinnaker-datadog-bridge/spinnakerdatadog"
+	"github.com/bobbytables/spinnaker-datadog-bridge/spinnaker"
+	"github.com/bobbytables/spinnaker-datadog-bridge/spinnakerdatadog"
 	"github.com/urfave/cli"
 
 	datadog "gopkg.in/zorkian/go-datadog-api.v2"

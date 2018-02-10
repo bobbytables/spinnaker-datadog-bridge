@@ -7,12 +7,12 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/namely/spinnaker-datadog-bridge/spinnaker/types"
+	"github.com/bobbytables/spinnaker-datadog-bridge/spinnaker/types"
 )
 
 // Handler defines an interface to allow you to implement your own handlers
 // for spinnaker webhooks that have been sent
-//go:generate mockgen -package=mocks -destination=./mocks/handler.go github.com/namely/spinnaker-datadog-bridge/spinnaker Handler
+//go:generate mockgen -package=mocks -destination=./mocks/handler.go github.com/bobbytables/spinnaker-datadog-bridge/spinnaker Handler
 type Handler interface {
 	Handle(incoming *types.IncomingWebhook) error
 }

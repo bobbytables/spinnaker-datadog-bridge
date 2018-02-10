@@ -13,9 +13,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/namely/spinnaker-datadog-bridge/spinnaker"
-	"github.com/namely/spinnaker-datadog-bridge/spinnaker/mocks"
-	"github.com/namely/spinnaker-datadog-bridge/spinnaker/types"
+	"github.com/bobbytables/spinnaker-datadog-bridge/spinnaker"
+	"github.com/bobbytables/spinnaker-datadog-bridge/spinnaker/mocks"
+	"github.com/bobbytables/spinnaker-datadog-bridge/spinnaker/types"
 )
 
 func TestDispatcherAddsHandlers(t *testing.T) {

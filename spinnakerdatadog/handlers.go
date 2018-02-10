@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/ghodss/yaml"
-	"github.com/namely/spinnaker-datadog-bridge/spinnaker"
+	"github.com/bobbytables/spinnaker-datadog-bridge/spinnaker"
 	"github.com/pkg/errors"
 	datadog "gopkg.in/zorkian/go-datadog-api.v2"
 )

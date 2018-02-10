@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/namely/spinnaker-datadog-bridge/spinnaker"
-	"github.com/namely/spinnaker-datadog-bridge/spinnaker/types"
-	spinnakerdatadog "github.com/namely/spinnaker-datadog-bridge/spinnakerdatadog"
+	"github.com/bobbytables/spinnaker-datadog-bridge/spinnaker"
+	"github.com/bobbytables/spinnaker-datadog-bridge/spinnaker/types"
+	spinnakerdatadog "github.com/bobbytables/spinnaker-datadog-bridge/spinnakerdatadog"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	datadog "gopkg.in/zorkian/go-datadog-api.v2"

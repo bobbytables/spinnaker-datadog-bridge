@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/namely/spinnaker-datadog-bridge/spinnaker"
-	"github.com/namely/spinnaker-datadog-bridge/spinnaker/types"
+	"github.com/bobbytables/spinnaker-datadog-bridge/spinnaker"
+	"github.com/bobbytables/spinnaker-datadog-bridge/spinnaker/types"
 	"github.com/pkg/errors"
 	datadog "gopkg.in/zorkian/go-datadog-api.v2"
 )
