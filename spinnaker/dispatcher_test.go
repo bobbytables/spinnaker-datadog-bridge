@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -40,8 +41,15 @@ func TestDispatcherHandlesRequests(t *testing.T) {
 				return m
 			},
 			assertion: func(d *spinnaker.Dispatcher, req *http.Request, t *testing.T) {
-				_, err := d.HandleIncomingRequest(req)
+				results, err := d.HandleIncomingRequest(req)
 				require.NoError(t, err)
+
+				select {
+				case result := <-results:
+					require.NoError(t, result.Err)
+				case <-time.After(time.Millisecond * 100):
+					t.Error("channel never closed")
+				}
 			},
 		},
 		{
@@ -57,19 +65,15 @@ func TestDispatcherHandlesRequests(t *testing.T) {
 				return m
 			},
 			assertion: func(d *spinnaker.Dispatcher, req *http.Request, t *testing.T) {
-				_, err := d.HandleIncomingRequest(req)
-				require.Error(t, err)
-			},
-		},
-		{
-			scenario:        "Webhook JSON is valid but the handler isnt registered for it",
-			requestBodyFile: "valid-webhook.json",
-			hookType:        "non:existent",
-			mockFactory:     defaultMockFactory,
-			assertion: func(d *spinnaker.Dispatcher, req *http.Request, t *testing.T) {
-				exists, err := d.HandleIncomingRequest(req)
-				require.False(t, exists)
+				results, err := d.HandleIncomingRequest(req)
 				require.NoError(t, err)
+
+				select {
+				case result := <-results:
+					require.Error(t, result.Err)
+				case <-time.After(time.Millisecond * 100):
+					t.Error("channel never closed")
+				}
 			},
 		},
 		{
@@ -78,9 +82,9 @@ func TestDispatcherHandlesRequests(t *testing.T) {
 			hookType:        "non:existent",
 			mockFactory:     defaultMockFactory,
 			assertion: func(d *spinnaker.Dispatcher, req *http.Request, t *testing.T) {
-				exists, err := d.HandleIncomingRequest(req)
-				require.False(t, exists)
+				results, err := d.HandleIncomingRequest(req)
 				require.Error(t, err)
+				require.Nil(t, results)
 			},
 		},
 	}

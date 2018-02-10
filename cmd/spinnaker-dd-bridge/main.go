@@ -1,12 +1,12 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
 
-	"github.com/sirupsen/logrus"
+	"github.com/namely/spinnaker-datadog-bridge/spinnaker"
+	"github.com/namely/spinnaker-datadog-bridge/spinnakerdatadog"
 	"github.com/urfave/cli"
 
 	datadog "gopkg.in/zorkian/go-datadog-api.v2"
@@ -64,30 +64,16 @@ func main() {
 
 func serverAction(c *cli.Context) error {
 	ddClient := datadog.NewClient(c.String("datadog-api-key"), c.String("datadog-app-key"))
+	dispatcher := spinnaker.NewDispatcher()
+	spout, err := spinnakerdatadog.NewSpout(ddClient, c.String("event-templates"))
+	if err != nil {
+		return err
+	}
+
+	spout.AttachToDispatcher(dispatcher)
 
 	http.HandleFunc("/webhook/", func(w http.ResponseWriter, req *http.Request) {
-		var webhook Webhook
-		if err := json.NewDecoder(req.Body).Decode(&webhook); err != nil {
-			logrus.WithError(err).Error()
-		}
-
-		if webhook.Details.Type == "orca:pipeline:starting" {
-			e := &datadog.Event{}
-			e.SetTitle("Pipeline Started")
-			e.SetAggregation(webhook.Content.Execution.ID)
-			e.Tags = []string{
-				fmt.Sprintf("app:%s", webhook.Details.Application),
-				"pipeline:starting",
-			}
-			e.SetText("# Pipeline Update!")
-
-			_, err := ddClient.PostEvent(e)
-			if err != nil {
-				logrus.WithError(err).Error("could not post pipeline update to datadog")
-			}
-		}
-
-		w.WriteHeader(http.StatusOK)
+		dispatcher.HandleIncomingRequest(req)
 	})
 
 	return http.ListenAndServe(":1991", http.DefaultServeMux)

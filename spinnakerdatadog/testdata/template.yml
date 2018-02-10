@@ -1,0 +1,5 @@
+orca:stage:complete:
+  title: "{{ .Details.Application }} Stage Completed"
+  text: |
+    Started at: {{ .Content.StartTime }}
+    Finished at: {{ .Content.EndTime }}
