@@ -1,0 +1,41 @@
+{
+  "details": {
+    "source": "orca",
+    "type": "orca:stage:complete",
+    "created": "1518214003433",
+    "organization": null,
+    "project": null,
+    "application": "hcm",
+    "_content_id": null,
+    "requestHeaders": {}
+  },
+  "content": {
+    "standalone": false,
+    "canceled": false,
+    "context": {
+      "cluster": "hcm-web-namely",
+      "interestingHealthProviderNames": [
+        "KubernetesContainer",
+        "KubernetesPod"
+      ],
+      "allowScaleDownActive": false,
+      "credentials": "int-k8s",
+      "cloudProvider": "kubernetes",
+      "namespace": "applications",
+      "moniker": null,
+      "preferLargerOverNewer": false,
+      "remainingFullSizeServerGroups": 1,
+      "zones": [],
+      "deploy.server.groups": {},
+      "refreshed.server.groups": [],
+      "processed.server.groups": [],
+      "force.cache.refresh.errors": [],
+      "stageDetails": {
+        "endTime": 1518214003420
+      }
+    },
+    "startTime": 1518214003091,
+    "endTime": 1518214003420,
+    "executionId": "88ebc19f-43bc-460c-9de5-2347b48f8efb"
+  }
+}
