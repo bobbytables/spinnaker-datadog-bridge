@@ -20,11 +20,17 @@ type DatadogEventHandler struct {
 
 var _ spinnaker.Handler = (*DatadogEventHandler)(nil)
 
+// NewDatadogEventHandler initializes a datadog event handler
 func NewDatadogEventHandler(s *Spout, template *EventTemplate) *DatadogEventHandler {
 	return &DatadogEventHandler{
 		spout:    s,
 		template: template,
 	}
+}
+
+// Name implements spinnaker.Handler
+func (deh *DatadogEventHandler) Name() string {
+	return "DatadogEventHandler"
 }
 
 // Handle implements spinnaker.Handler. It sends datadog events for the given

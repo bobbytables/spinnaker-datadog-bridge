@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"sync"
+	"time"
 
 	"github.com/pkg/errors"
 
@@ -15,6 +16,7 @@ import (
 //go:generate mockgen -package=mocks -destination=./mocks/handler.go github.com/bobbytables/spinnaker-datadog-bridge/spinnaker Handler
 type Handler interface {
 	Handle(incoming *types.IncomingWebhook) error
+	Name() string
 }
 
 // HandlerMap contains all of the handlers and the type of detail they are used for
@@ -31,8 +33,10 @@ type Dispatcher struct {
 // to allow piping multiple handlers per hook but still get insight into
 // the result of each one so you can error or log
 type DispatchResult struct {
-	HookType string
-	Err      error
+	HookType    string
+	HandlerName string
+	Err         error
+	Duration    time.Duration
 }
 
 // NewDispatcher initializes a new dispatcher instance
@@ -75,9 +79,14 @@ func (d *Dispatcher) HandleIncomingRequest(req *http.Request) (<-chan DispatchRe
 	results := make(chan DispatchResult)
 	for _, handler := range handlers {
 		go func(handler Handler) {
+			start := time.Now()
+			err := handler.Handle(incoming)
+			took := time.Since(start)
 			results <- DispatchResult{
-				Err:      handler.Handle(incoming),
-				HookType: incoming.Details.Type,
+				Err:         err,
+				HandlerName: handler.Name(),
+				HookType:    incoming.Details.Type,
+				Duration:    took,
 			}
 
 			wg.Done()

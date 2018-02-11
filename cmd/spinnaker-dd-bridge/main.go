@@ -2,35 +2,16 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 
+	"github.com/sirupsen/logrus"
+	"github.com/urfave/cli"
+	datadog "gopkg.in/zorkian/go-datadog-api.v2"
+
+	"github.com/bobbytables/spinnaker-datadog-bridge/server"
 	"github.com/bobbytables/spinnaker-datadog-bridge/spinnaker"
 	"github.com/bobbytables/spinnaker-datadog-bridge/spinnakerdatadog"
-	"github.com/urfave/cli"
-
-	datadog "gopkg.in/zorkian/go-datadog-api.v2"
 )
-
-type Webhook struct {
-	Details Details `json:"details"`
-	Content Content `json:"content"`
-}
-
-type Details struct {
-	Source      string `json:"source"`
-	Type        string `json:"type"`
-	Created     string `json:"created"`
-	Application string `json:"application"`
-}
-
-type Content struct {
-	Execution Execution `json:"execution"`
-}
-
-type Execution struct {
-	ID string `json:"id"`
-}
 
 func main() {
 	app := cli.NewApp()
@@ -54,6 +35,17 @@ func main() {
 			Usage:  "your datadog app key (Found at https://app.datadoghq.com/account/settings#api)",
 			EnvVar: "DATADOG_APP_KEY",
 		},
+		cli.StringFlag{
+			Name:   "event-templates",
+			Usage:  "The file where your event templates are located for Spinnaker events",
+			EnvVar: "EVENT_TEMPLATES",
+		},
+		cli.StringFlag{
+			Name:   "addr",
+			Usage:  "The address the server listens on",
+			EnvVar: "ADDR",
+			Value:  ":3000",
+		},
 	}
 
 	if err := app.Run(os.Args); err != nil {
@@ -70,11 +62,9 @@ func serverAction(c *cli.Context) error {
 		return err
 	}
 
+	logrus.StandardLogger().SetLevel(logrus.DebugLevel)
+
 	spout.AttachToDispatcher(dispatcher)
 
-	http.HandleFunc("/webhook/", func(w http.ResponseWriter, req *http.Request) {
-		dispatcher.HandleIncomingRequest(req)
-	})
-
-	return http.ListenAndServe(":1991", http.DefaultServeMux)
+	return server.New(c.String("addr"), dispatcher).Start()
 }

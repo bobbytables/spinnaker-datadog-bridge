@@ -5,8 +5,8 @@
 package mocks
 
 import (
-	gomock "github.com/golang/mock/gomock"
 	types "github.com/bobbytables/spinnaker-datadog-bridge/spinnaker/types"
+	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
 )
 
@@ -43,4 +43,16 @@ func (m *MockHandler) Handle(arg0 *types.IncomingWebhook) error {
 // Handle indicates an expected call of Handle
 func (mr *MockHandlerMockRecorder) Handle(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockHandler)(nil).Handle), arg0)
+}
+
+// Name mocks base method
+func (m *MockHandler) Name() string {
+	ret := m.ctrl.Call(m, "Name")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// Name indicates an expected call of Name
+func (mr *MockHandlerMockRecorder) Name() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Name", reflect.TypeOf((*MockHandler)(nil).Name))
 }

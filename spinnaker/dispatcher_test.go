@@ -37,6 +37,7 @@ func TestDispatcherHandlesRequests(t *testing.T) {
 				m.EXPECT().Handle(gomock.Any()).Do(func(incoming *types.IncomingWebhook) {
 					assert.Equal(t, "orca:stage:complete", incoming.Details.Type)
 				})
+				m.EXPECT().Name().Return("MockHandler")
 
 				return m
 			},
@@ -61,6 +62,7 @@ func TestDispatcherHandlesRequests(t *testing.T) {
 				m.EXPECT().Handle(gomock.Any()).Do(func(incoming *types.IncomingWebhook) {
 					assert.Equal(t, "orca:stage:complete", incoming.Details.Type)
 				}).Return(errors.New("well that sucks"))
+				m.EXPECT().Name().Return("MockHandler")
 
 				return m
 			},
