@@ -41,6 +41,8 @@ func (s *Server) prepare() {
 
 	router := mux.NewRouter()
 	router.HandleFunc("/webhook", s.handleWebhook)
+	router.HandleFunc("/webhook/", s.handleWebhook)
+	router.Use(s.loggingMiddleware)
 
 	s.mux = router
 }
@@ -76,4 +78,15 @@ func (s *Server) handleWebhook(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 	}
+}
+
+func (s *Server) loggingMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		next.ServeHTTP(w, r)
+		logrus.WithFields(logrus.Fields{
+			"uri":      r.RequestURI,
+			"duration": time.Since(start).String(),
+		}).Info("incoming request")
+	})
 }

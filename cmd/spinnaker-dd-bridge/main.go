@@ -46,6 +46,10 @@ func main() {
 			EnvVar: "ADDR",
 			Value:  ":3000",
 		},
+		cli.BoolFlag{
+			Name:  "debug",
+			Usage: "Turn on DEBUG level logging",
+		},
 	}
 
 	if err := app.Run(os.Args); err != nil {
@@ -62,7 +66,9 @@ func serverAction(c *cli.Context) error {
 		return err
 	}
 
-	logrus.StandardLogger().SetLevel(logrus.DebugLevel)
+	if c.Bool("debug") {
+		logrus.StandardLogger().SetLevel(logrus.DebugLevel)
+	}
 
 	spout.AttachToDispatcher(dispatcher)
 
