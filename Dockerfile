@@ -11,6 +11,7 @@ RUN go build -o /spinnaker-dd-bridge ./cmd/spinnaker-dd-bridge
 FROM alpine:3.6
 MAINTAINER Robert Ross <robert@creativequeries.com>
 
+RUN apk add --update ca-certificates
 WORKDIR /usr/local/bin
 COPY --from=builder /spinnaker-dd-bridge .
 

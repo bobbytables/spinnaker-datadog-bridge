@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 
 	"github.com/bobbytables/spinnaker-datadog-bridge/spinnaker/types"
 )
@@ -72,6 +73,10 @@ func (d *Dispatcher) HandleIncomingRequest(req *http.Request) (<-chan DispatchRe
 	}
 
 	handlers := d.Handlers()[incoming.Details.Type]
+	logrus.WithFields(logrus.Fields{
+		"hook_type": incoming.Details.Type,
+		"handlers":  len(handlers),
+	}).Debug("dispatch called")
 
 	var wg sync.WaitGroup
 	wg.Add(len(handlers))

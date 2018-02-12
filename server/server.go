@@ -65,7 +65,7 @@ func (s *Server) handleWebhook(w http.ResponseWriter, req *http.Request) {
 			}
 
 			if res.Err != nil {
-				logrus.WithError(err).WithField("handler", res.HandlerName).Error("handler error")
+				logrus.WithError(res.Err).WithField("handler", res.HandlerName).Error("handler error")
 			} else {
 				logrus.WithFields(logrus.Fields{
 					"handler":  res.HandlerName,
