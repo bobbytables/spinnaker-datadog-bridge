@@ -22,6 +22,10 @@ func (t *Timestamp) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements json.Unmarshaler
 func (t *Timestamp) UnmarshalJSON(b []byte) error {
+	if string(b) == "null" {
+		return nil
+	}
+
 	ts, err := strconv.Atoi(string(b))
 	if err != nil {
 		return err
